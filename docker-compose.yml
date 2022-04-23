@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+
+  mongo:
+    image: mongo:5.0.7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nimi
+      MONGO_INITDB_ROOT_PASSWORD: nimi
+    ports:
+      - 27017:27017
+    container_name: mongo
+  mongo-express:
+    image: mongo-express
+    depends_on:
+      - mongo
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://nimi:nimi@localhost:27017
