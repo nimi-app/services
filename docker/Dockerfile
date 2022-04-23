@@ -27,6 +27,4 @@ WORKDIR /app
 RUN mkdir -p /app/cache
 COPY --from=ts-remover /app ./
 
-EXPOSE 3000
-
 CMD ["node", "index.js"]
