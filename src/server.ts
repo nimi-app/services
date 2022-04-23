@@ -45,7 +45,7 @@ export async function configure(server: Server): Promise<Server> {
     await server.register({
       plugin: require('hapi-rate-limit'),
       options: {
-        userLimit: 60,
+        userLimit: 60000,
       },
     });
   }
