@@ -152,7 +152,7 @@ export async function createWebsiteFromTemplate(
 
     const profielDir = join(
       PROFILES_DIR,
-      `/${payload.ensAddress}-${dayjs().format('YYYY-MM-DDT-HH-mm')}`
+      `/${payload.ensAddress}-${dayjs().format('YYYY-MM-DDT-HH-mm-ss')}`
     );
     // create directory
     await mkdir(profielDir);
