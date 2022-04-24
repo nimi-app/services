@@ -22,3 +22,10 @@ export const MONGO_URI = process.env.MONGO_URI as string;
  */
 export const SENTRY_DSN = process.env.SENTRY_DSN as string;
 
+/**
+ *
+ */
+export const PINATA_API_KEY = process.env.PINATA_API_KEY as string;
+export const PINATA_SECRET_API_KEY = process.env
+  .PINATA_SECRET_API_KEY as string;
+
