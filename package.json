@@ -1,5 +1,5 @@
 {
-  "name": "nimi-backend",
+  "name": "nimi-services",
   "version": "1.0.0",
   "description": "API service for Nimi",
   "main": "build/index.js",
