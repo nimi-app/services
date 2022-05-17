@@ -1,10 +1,10 @@
 import { config } from 'dotenv';
 
-export const SERVER_PORT = process.env.SERVER_PORT || 3000;
-export const SERVER_HOST = process.env.SERVER_HOST || '0.0.0.0';
-
 // Load the config
 config();
+
+export const SERVER_PORT = process.env.SERVER_PORT || 3000;
+export const SERVER_HOST = process.env.SERVER_HOST || '0.0.0.0';
 
 /**
  * Config for Auth Server
