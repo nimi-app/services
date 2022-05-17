@@ -56,7 +56,7 @@ export async function getTwitterProfileByUsername(req: IRequest) {
     }
 
     // Save to database
-    await TwitterUserModel.updateOne(
+    const twitterUserUpsertResult = await TwitterUserModel.findOneAndUpdate(
       { username: twitterUserFromAPI.username },
       {
         $set: {
@@ -73,16 +73,12 @@ export async function getTwitterProfileByUsername(req: IRequest) {
       {
         upsert: true,
         setDefaultsOnInsert: true,
+        returnDocument: 'after',
       }
     );
 
-    // Fetch the user again from the database
-    const twitterUserFromMongoAfterUpdate = await TwitterUserModel.findOne({
-      username: query.username,
-    });
-
     return {
-      data: twitterUserFromMongoAfterUpdate?.toJSON({
+      data: twitterUserUpsertResult?.toJSON({
         virtuals: true,
         versionKey: false,
       }),
