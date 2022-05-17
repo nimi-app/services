@@ -18,9 +18,9 @@ export const TWITTER_API_V2_BEARER_TOKEN = process.env
 export const MONGO_URI = process.env.MONGO_URI as string;
 
 /**
- * Sentry Debug DSN
+ * Sentry Debug DSN: optional
  */
-export const SENTRY_DSN = process.env.SENTRY_DSN as string;
+export const SENTRY_DSN = process.env.SENTRY_DSN;
 
 /**
  *

@@ -2,6 +2,7 @@ import dayjsUtcPlugin from 'dayjs/plugin/utc';
 import * as Sentry from '@sentry/node';
 import Mongoose from 'mongoose';
 import dayjs from 'dayjs';
+import chalk from 'chalk';
 
 import { SENTRY_DSN, MONGO_URI } from './modules/config/config.service';
 import { start as startServer } from './server';
@@ -10,20 +11,22 @@ import { start as startServer } from './server';
 dayjs.extend(dayjsUtcPlugin);
 
 async function startService() {
-  // initilize Sentry
-  Sentry.init({
-    attachStacktrace: true,
-    environment: process.env.NODE_ENV,
-    dsn: SENTRY_DSN,
-  });
+  if (SENTRY_DSN) {
+    // initilize Sentry
+    Sentry.init({
+      attachStacktrace: true,
+      environment: process.env.NODE_ENV,
+      dsn: SENTRY_DSN,
+    });
+  } else {
+    console.warn(chalk.yellowBright('Sentry: Sentry is not configured'));
+  }
 
   // Mongoose watchdog
   Mongoose.connection.on('error', error => {
     Sentry.captureException(error);
     process.exit(100);
   });
-
-  console.log(MONGO_URI);
 
   // Mongo connect
   await Mongoose.connect(MONGO_URI as string, {});
