@@ -14,7 +14,7 @@ fi
 
 # Construct Docker image
 # DOCKER_TAG=$GIT_REVISION
-DOCKER_IMAGE_NAME="nimi-backend"
+DOCKER_IMAGE_NAME="nimi-services"
 DOCKER_IMAGE="${DOCKER_IMAGE_NAME}"
 
 echo "Building ${DOCKER_IMAGE} @ ${GIT_COMMIT}"
