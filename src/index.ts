@@ -29,6 +29,11 @@ async function startService() {
   });
 
   // Mongo connect
+  if (!MONGO_URI) {
+    console.error(chalk.redBright('Mongo: MONGO_URI is missing'));
+    process.exit(1);
+  }
+
   await Mongoose.connect(MONGO_URI as string, {});
 
   if (process.env.NODE_ENV !== 'test') {
