@@ -9,7 +9,7 @@ export const DEFAULT_AUTH_STRATEGY = 'bearer';
 
 /**
  * Creates a new Hapi Auth Server with the following config
- * - port = `AUTH_SERVER_PORT` and host `AUTH_SERVER_HOST`
+ * - port = `SERVER_PORT` and host `SERVER_HOST`
  * - Cache engine set to `CatboxMemory`
  * - All routes support CORS and not authentication required
  * @returns Server
