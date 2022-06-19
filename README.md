@@ -16,12 +16,20 @@ or
 sh ./docker/build.sh
 ```
 
-Now run the image `nimi-backend`
+Create `.env` file
 
-```bash
+```shell
+TWITTER_API_V2_BEARER_TOKEN=AAAAAAAAAAAAAAAAAAA
+MONGO_URI=mongodb+srv://nimi:nimi@localhost/
+PINATA_API_KEY=<pinata-key>
+PINATA_API_SECRET=<pinata-secret>
+```
+
+Now run the image `nimi-services`
+
+```shell
 docker run -d \
 -p 3000:3000 \
--e TWITTER_API_V2_BEARER_TOKEN='<from-twitter>' \
--e MONGO_URI='mongodb://localhost:27017' \
-nimi-backend
+--env-file ./.env \
+nimi-services
 ```
