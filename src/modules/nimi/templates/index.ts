@@ -6,6 +6,8 @@ import dayjsUTCPlugin from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
 import { getCardFileList } from './bundleFileList';
 import { join } from 'path';
+import { createMetaTags } from './metaTags';
+import { readFile } from 'fs/promises';
 
 export * from './metaTags';
 
@@ -28,19 +30,45 @@ export async function createNimiCardBundle(
 
   const validatedNimiCard = await nimiCard.validate(nimi);
 
+  const cardUrl = `https://${validatedNimiCard.ensName}.eth.limo`;
+
   const name = `nimi-card--${validatedNimiCard.ensName}-${dayjs()
     .utc()
     .format('YYYY-MM-DDT-HH-mm-ss')}`;
 
   // Create the bundle
-  const bundleFiles = templateFileList.map(file => {
-    return new File({
-      stream: createReadStream(file.absolutePath),
-      filename: file.name,
-      contentType: 'application/octet-stream',
-      filepath: join('public', file.path),
-    });
-  });
+  const bundleFiles = await Promise.all(
+    templateFileList.map(async file => {
+      // Default read stream
+      let stream: NodeJS.ReadableStream | Buffer = createReadStream(
+        file.absolutePath,
+        'utf-8'
+      );
+
+      // Add metatags to index.html
+      if (file.name === 'index.html') {
+        const metaTags = createMetaTags({
+          description: validatedNimiCard.description || '',
+          title: `${validatedNimiCard.displayName} on Nimi`,
+          imageUrl: './static/images/cover.png',
+          url: cardUrl,
+        });
+
+        const indexHTMLContentWithMetaTags = (
+          await readFile(file.absolutePath, 'utf-8')
+        ).replace('</head>', `${metaTags}</head>`);
+
+        stream = Readable.from([indexHTMLContentWithMetaTags]);
+      }
+
+      return new File({
+        stream,
+        filename: file.name,
+        contentType: 'application/octet-stream',
+        filepath: join('public', file.path),
+      });
+    })
+  );
 
   const files = [
     ...bundleFiles,
