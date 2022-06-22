@@ -4,6 +4,7 @@ import Joi from 'joi';
 // Controllers
 import { twitter } from '../twitter/controllers';
 import { createWebsiteFromTemplate } from '../nimi/controllers';
+import { uploadImageAssetToIPFS } from '../assets';
 
 async function register(server: Server) {
   // Return nothing
@@ -17,6 +18,7 @@ async function register(server: Server) {
     method: 'GET',
     path: '/twitter-info',
     options: {
+      description: 'Get a Twitter profile info by username',
       validate: {
         query: {
           username: Joi.string().required(),
@@ -31,9 +33,28 @@ async function register(server: Server) {
     method: 'POST',
     path: '/nimi/publish',
     options: {
+      description: 'Publish a Nimi from a template',
       tags: ['api', 'cards'],
     },
     handler: createWebsiteFromTemplate,
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/nimi/assets',
+    options: {
+      description: 'Upload an image asset to IPFS',
+      payload: {
+        allow: ['multipart/form-data'],
+        parse: true,
+        multipart: {
+          output: 'stream',
+        },
+        maxBytes: 2 * 1024 * 1024, // 2MB
+      },
+      tags: ['api', 'assets'],
+    },
+    handler: uploadImageAssetToIPFS,
   });
 }
 
