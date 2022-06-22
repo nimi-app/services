@@ -4,7 +4,7 @@ import { Nimi } from 'nimi-card';
 // Modules
 import { create, configure } from '../../../server';
 
-describe('Nimi Controllers', () => {
+describe.skip('Nimi Controllers', () => {
   let server: Server;
 
   beforeEach(async () => {
