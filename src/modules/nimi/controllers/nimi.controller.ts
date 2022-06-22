@@ -3,7 +3,7 @@ import { Request } from '@hapi/hapi';
 import { Nimi, nimiCard } from 'nimi-card';
 import Boom from '@hapi/boom';
 
-import { PinataService } from '../services';
+import { PinataService } from '../../shared/services';
 // Constants
 import { PINATA_API_KEY, PINATA_API_SECRET } from '../../config/config.service';
 import { createNimiCardBundle } from '../templates';

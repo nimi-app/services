@@ -1,7 +1,7 @@
 import { createReadStream } from 'fs';
 import { Nimi, nimiCard } from 'nimi-card';
 import { Readable } from 'stream';
-import { File } from '../services';
+import { File } from '../../shared/services';
 import dayjsUTCPlugin from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
 import { getCardFileList } from './bundleFileList';

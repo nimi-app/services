@@ -4,6 +4,7 @@ const { defaults } = require('jest-config');
 /** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
   roots: ['<rootDir>'],
+  preset: '@shelf/jest-mongodb',
   testEnvironment: 'node',
   testPathIgnorePatterns: ['<rootDir>/build/', '<rootDir>/node_modules/'],
   testTimeout: 30000,
