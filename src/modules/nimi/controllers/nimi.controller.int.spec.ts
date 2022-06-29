@@ -54,6 +54,7 @@ describe.skip('Nimi Controllers', () => {
             url: 'https://nimi.eth.limo',
           },
         ],
+        widgets: [],
       };
 
       const signupRes = await server.inject({

@@ -16,6 +16,7 @@ describe('Nimi Templates', () => {
         links: [],
         description: 'test',
         displayImageUrl: 'https://test.com/test.png',
+        widgets: [],
       });
 
       expect(Array.isArray(bundle.files)).toBeTruthy();
