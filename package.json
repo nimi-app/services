@@ -17,7 +17,7 @@
     "@hapi/catbox-memory": "^5.0.1",
     "@hapi/hapi": "^20.2.2",
     "@pinata/sdk": "^1.1.26",
-    "@sentry/node": "^7.3.0",
+    "@sentry/node": "^7.6.0",
     "@sentry/tracing": "^7.5.0",
     "axios": "^0.27.2",
     "chalk": "^4.1.2",
