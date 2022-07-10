@@ -1,1 +1,1 @@
-export * from './pinata.serive';
+export * from './pinata';

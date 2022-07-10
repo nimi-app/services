@@ -2,7 +2,7 @@ import { captureException } from '@sentry/node';
 import { Request } from '@hapi/hapi';
 import Boom from '@hapi/boom';
 import { getMimeType } from 'stream-mime-type';
-import { File, PinataService } from '../../shared/services';
+import { File, PinataService } from '../../shared/services/pinata';
 // Constants
 import { PINATA_API_KEY, PINATA_API_SECRET } from '../../config/config.service';
 import { ImageAssetModel } from '../models';
