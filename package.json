@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hapi/catbox-memory": "^6.0.0",
+    "@hapi/catbox-memory": "^5.0.1",
     "@hapi/hapi": "^20.2.2",
     "@pinata/sdk": "^1.1.26",
     "@sentry/node": "^7.3.0",
