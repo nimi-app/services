@@ -48,7 +48,7 @@
     "@types/jest": "^27.4.1",
     "@types/mongoose": "^5.11.97",
     "@types/mongoose-delete": "^0.5.9",
-    "@types/node": "^18.0.0",
+    "@types/node": "^18.0.3",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.19.0",
