@@ -1,9 +1,15 @@
 import CatboxMemory from '@hapi/catbox-memory';
+import AuthBearer from 'hapi-auth-bearer-token';
 import { Server } from '@hapi/hapi';
 import Joi from 'joi';
 
-import { SERVER_HOST, SERVER_PORT } from './modules/config/config.service';
+import {
+  JSON_WEB_TOKEN_SECRET,
+  SERVER_HOST,
+  SERVER_PORT,
+} from './modules/config/config.service';
 import { AuthRoutesPlugin } from './modules/routes';
+import { JsonWebTokenService } from './modules/shared/services';
 
 export const DEFAULT_AUTH_STRATEGY = 'bearer';
 
@@ -49,6 +55,40 @@ export async function configure(server: Server): Promise<Server> {
       },
     });
   }
+  // Register and configure the auth strategy
+  await server.register(AuthBearer);
+  // setup Auth strategy
+  server.auth.strategy(DEFAULT_AUTH_STRATEGY, 'bearer-access-token', {
+    async validate(_req: Request, token: string) {
+      const jwtService = new JsonWebTokenService(JSON_WEB_TOKEN_SECRET);
+
+      // Return value is an object of these
+      const artifacts = {};
+      let isValid = true;
+      let credentials;
+      let error: Error | undefined;
+
+      try {
+        credentials = await jwtService.verify<unknown>(token);
+      } catch (authError) {
+        console.log(authError);
+        error = authError;
+        isValid = false;
+      }
+
+      return {
+        isValid,
+        artifacts,
+        credentials,
+        error,
+      };
+    },
+  });
+  // Set default auth strategy to bearer
+  server.auth.default({
+    mode: 'optional',
+    strategies: [DEFAULT_AUTH_STRATEGY],
+  });
 
   // Register routes
   await server.register(AuthRoutesPlugin);

@@ -28,3 +28,16 @@ export const SENTRY_DSN = process.env.SENTRY_DSN;
 export const PINATA_API_KEY = process.env.PINATA_API_KEY as string;
 export const PINATA_API_SECRET = process.env.PINATA_API_SECRET as string;
 
+/**
+ *
+ */
+export const JSON_WEB_TOKEN_SECRET = process.env
+  .JSON_WEB_TOKEN_SECRET as string;
+
+/**
+ * Nimi Connect Signature Text Payload
+ * This is the text that is used to sign and verify signatures.
+ */
+export const NIMI_CONNECT_SIGNATURE_TEXT_PAYLOAD =
+  process.env.NIMI_CONNECT_SIGNATURE_TEXT_PAYLOAD || 'Nimi Connect';
+

@@ -5,6 +5,10 @@ import Joi from 'joi';
 import { twitter } from '../twitter/controllers';
 import { createWebsiteFromTemplate } from '../nimi/controllers';
 import { uploadImageAssetToIPFS } from '../assets';
+import {
+  createNimiConnectBearerSession,
+  createNimiConnectRequest,
+} from '../nimi-connect';
 
 async function register(server: Server) {
   // Return nothing
@@ -37,6 +41,26 @@ async function register(server: Server) {
       tags: ['api', 'cards'],
     },
     handler: createWebsiteFromTemplate,
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/nimi/connect/token',
+    options: {
+      description: 'Create a Nimi Connect Bearer Session',
+      tags: ['api', 'nimi connect'],
+    },
+    handler: createNimiConnectBearerSession,
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/nimi/{ensName}/connect',
+    options: {
+      description: 'Create a Nimi Connect Request to another ENS/Nimi',
+      tags: ['api', 'nimi connect'],
+    },
+    handler: createNimiConnectRequest,
   });
 
   server.route({
