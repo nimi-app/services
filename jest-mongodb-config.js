@@ -9,5 +9,6 @@ module.exports = {
     },
     autoStart: false,
   },
+  mongoURLEnvName: 'MONGO_URI',
 };
 

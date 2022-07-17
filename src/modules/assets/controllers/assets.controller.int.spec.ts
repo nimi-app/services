@@ -1,5 +1,5 @@
 import { Server } from '@hapi/hapi';
-import pinataClient, { PinataPinResponse } from '@pinata/sdk';
+import axios from 'axios';
 import FormData from 'form-data';
 import mongoose from 'mongoose';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -7,8 +7,21 @@ const streamToPromise = require('stream-to-promise');
 
 // Modules
 import { create, configure } from '../../../server';
+import { ImageAssetModel } from '../models';
 
-describe.skip('Assets Controllers', () => {
+jest.mock('axios');
+
+const testIpfsHash = 'QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR';
+
+(axios as jest.Mocked<typeof axios>).post.mockResolvedValueOnce({
+  data: {
+    IpfsHash: testIpfsHash,
+    PinSize: 10000,
+    Timestamp: Date.now() / 1000,
+  },
+});
+
+describe('Assets Controllers', () => {
   let server: Server;
 
   beforeEach(async () => {
@@ -22,8 +35,8 @@ describe.skip('Assets Controllers', () => {
     await mongoose.disconnect();
   });
 
-  describe('createWebsiteFromTemplate', () => {
-    test('should create a Nimi card website from a template', async () => {
+  describe('uploadImageAssetToIPFS', () => {
+    test('should upload PNG asset to IPFS and save a local copy in database', async () => {
       const formData = new FormData();
 
       formData.append(
@@ -48,16 +61,12 @@ describe.skip('Assets Controllers', () => {
       });
 
       expect(signupRes.statusCode).toBe(200);
+      expect((signupRes.result as any).data.IpfsHash).toEqual(testIpfsHash);
 
-      // ---- END OF TEST ----
-      // clean up IPFS
-      const ipfsClient = pinataClient(
-        process.env.PINATA_API_KEY as string,
-        process.env.PINATA_API_SECRET as string
-      );
-      await ipfsClient.unpin(
-        (signupRes?.result as { data: PinataPinResponse }).data.IpfsHash
-      );
+      const assetFromMongo = await ImageAssetModel.findOne({
+        cid: testIpfsHash,
+      });
+      expect(assetFromMongo).toBeDefined();
     });
   });
 });
