@@ -7,6 +7,7 @@ import { PinataService } from '../../shared/services';
 // Constants
 import { PINATA_API_KEY, PINATA_API_SECRET } from '../../config/config.service';
 import { createNimiCardBundle } from '../templates';
+import { NimiModel } from '../models/Nimi.model';
 
 interface ICreateWebsiteFromTemplateRequest extends Request {
   payload: Nimi;
@@ -38,6 +39,18 @@ export async function createWebsiteFromTemplate(
         name,
       },
     });
+
+    // Save a copy to database
+    new NimiModel({
+      publisher: validatedNimiCard.ensAddress,
+      cid: res.IpfsHash,
+      nimi: validatedNimiCard,
+    })
+      .save()
+      .catch(err => {
+        console.error(err);
+        captureException(err);
+      });
 
     return {
       data: res,
