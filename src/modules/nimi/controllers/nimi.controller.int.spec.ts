@@ -1,10 +1,20 @@
 import { Server } from '@hapi/hapi';
-import pinataClient, { PinataPinResponse } from '@pinata/sdk';
+import axios from 'axios';
 import { Nimi } from 'nimi-card';
 // Modules
 import { create, configure } from '../../../server';
 
-describe.skip('Nimi Controllers', () => {
+jest.mock('axios');
+
+(axios as jest.Mocked<typeof axios>).post.mockResolvedValueOnce({
+  data: {
+    IpfsHash: 'QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR',
+    PinSize: 10000,
+    Timestamp: Date.now() / 1000,
+  },
+});
+
+describe('Nimi Controllers', () => {
   let server: Server;
 
   beforeEach(async () => {
@@ -66,16 +76,6 @@ describe.skip('Nimi Controllers', () => {
       expect(signupRes.statusCode).toBe(200);
 
       console.log(signupRes.result);
-
-      // ---- END OF TEST ----
-      // clean up IPFS
-      const ipfsClient = pinataClient(
-        process.env.PINATA_API_KEY as string,
-        process.env.PINATA_API_SECRET as string
-      );
-      await ipfsClient.unpin(
-        (signupRes?.result as { data: PinataPinResponse }).data.IpfsHash
-      );
     });
   });
 });
