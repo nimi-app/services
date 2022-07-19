@@ -33,7 +33,7 @@
     "is-ipfs": "^6.0.2",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.4.2",
+    "mongoose": "^6.4.5",
     "mongoose-delete": "^0.5.4",
     "mongoose-unique-validator": "^3.1.0",
     "nimi-card": "^0.7.9-beta",
