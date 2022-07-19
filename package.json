@@ -36,7 +36,7 @@
     "mongoose": "^6.4.2",
     "mongoose-delete": "^0.5.4",
     "mongoose-unique-validator": "^3.1.0",
-    "nimi-card": "^0.7.5-beta",
+    "nimi-card": "^0.7.9-beta",
     "stream-mime-type": "^1.0.2",
     "validator": "^13.7.0"
   },

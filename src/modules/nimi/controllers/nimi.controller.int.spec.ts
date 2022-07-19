@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Server } from '@hapi/hapi';
 import axios from 'axios';
-import { Nimi } from 'nimi-card';
+import { Nimi, NimiBlockchain } from 'nimi-card';
 // Modules
 import { create, configure } from '../../../server';
 import { NimiModel } from '../models/Nimi.model';
@@ -43,7 +43,7 @@ describe('Nimi Controllers', () => {
     addresses: [
       {
         address: '0x4e675ceB415fC41700fb821fF3B43cE5C8B9a83B',
-        blockchain: 'ethereum',
+        blockchain: NimiBlockchain.ETHEREUM,
       },
     ],
     description:

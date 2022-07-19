@@ -1,3 +1,4 @@
+import { NimiBlockchain } from 'nimi-card';
 import { createNimiCardBundle } from '.';
 
 describe('Nimi Templates', () => {
@@ -7,7 +8,7 @@ describe('Nimi Templates', () => {
         addresses: [
           {
             address: '0x0000000000000000000000000000000000000000',
-            blockchain: 'ethereum',
+            blockchain: NimiBlockchain.ETHEREUM,
           },
         ],
         displayName: 'Test',
