@@ -6,7 +6,7 @@ import pinataSDK, {
 import axios from 'axios';
 import NodeFormData from 'form-data';
 
-import { File } from './File';
+import { File } from '../../util/File';
 
 interface PinataServiceConstructorParams {
   key: string;
@@ -31,7 +31,10 @@ export class PinataService {
     return this.client.pinFromFS(sourcePath, options);
   }
 
-  async pinFiles(fileList: File[], options?: PinataPinOptions | undefined) {
+  async pinFiles(
+    fileList: Array<File>,
+    options?: PinataPinOptions | undefined
+  ) {
     const data = new NodeFormData();
     const endpoint = `${this.baseUrl}/pinning/pinFileToIPFS`;
 

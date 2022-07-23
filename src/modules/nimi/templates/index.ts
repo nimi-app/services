@@ -1,7 +1,7 @@
 import { createReadStream } from 'fs';
 import { Nimi, nimiCard } from 'nimi-card';
 import { Readable } from 'stream';
-import { File } from '../../shared/services/pinata/File';
+import { File } from '../../shared/util/File';
 import dayjsUTCPlugin from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
 import { getCardFileList } from './bundleFileList';
@@ -63,6 +63,7 @@ export async function createNimiCardBundle(
 
       return new File({
         stream,
+        name: file.name,
         filename: file.name,
         contentType: 'application/octet-stream',
         filepath: join('public', file.path),
@@ -75,6 +76,7 @@ export async function createNimiCardBundle(
     new File({
       stream: Readable.from([JSON.stringify(validatedNimiCard)]),
       filename: 'data.json',
+      name: 'data.json',
       contentType: 'application/json',
       filepath: 'public/data.json',
     }),

@@ -1,3 +1,1 @@
-export * from './pinata.serive';
-export { File, FileParams } from './File';
-
+export * from './Pinata.service';
