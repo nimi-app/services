@@ -3,30 +3,36 @@ import { Request } from '@hapi/hapi';
 import { Nimi, nimiCard } from 'nimi-card';
 import Boom from '@hapi/boom';
 
-import { PinataService } from '../../shared/services';
 // Constants
-import { PINATA_API_KEY, PINATA_API_SECRET } from '../../config/config.service';
+import { WEB3_STORAGE_ACCESS_TOKEN } from '../../config/config.service';
 import { createNimiCardBundle } from '../templates';
 import { NimiModel } from '../models/Nimi.model';
+import { Web3StorageService } from '../../shared/services/web3-storage';
+import { APIGeneralResponse } from 'src/modules/shared/interfaces/response.interface';
 
-interface ICreateWebsiteFromTemplateRequest extends Request {
+interface IPublishNimiRequest extends Request {
   payload: Nimi;
+}
+
+interface PublishNimiRequestResponse {
+  /**
+   * The cid of the pin that was created CIDv1
+   */
+  cidV1: string;
 }
 
 /**
  * Create a Nimi card website from a template
  */
-export async function createWebsiteFromTemplate(
-  req: ICreateWebsiteFromTemplateRequest
-) {
+export async function publishNimi(
+  req: IPublishNimiRequest
+): Promise<APIGeneralResponse<PublishNimiRequestResponse>> {
   try {
     // validate the payload
     const validatedNimiCard = await nimiCard.validate(req.payload ?? {});
 
-    // Start uploading the IPFS files
-    const pinataService = new PinataService({
-      key: PINATA_API_KEY,
-      secret: PINATA_API_SECRET,
+    const web3StorageService = new Web3StorageService({
+      accessToken: WEB3_STORAGE_ACCESS_TOKEN,
     });
 
     // Copy all files into memory
@@ -34,16 +40,16 @@ export async function createWebsiteFromTemplate(
       validatedNimiCard as Nimi
     );
 
-    const res = await pinataService.pinFiles(files, {
-      pinataMetadata: {
-        name,
-      },
+    // Put
+    const pinResponse = await web3StorageService.pinFiles(files, {
+      name,
     });
 
     // Save a copy to database
-    new NimiModel({
+    await new NimiModel({
       publisher: validatedNimiCard.ensAddress,
-      cid: res.IpfsHash,
+      cid: null,
+      cidV1: pinResponse.cid,
       nimi: validatedNimiCard,
     })
       .save()
@@ -53,7 +59,9 @@ export async function createWebsiteFromTemplate(
       });
 
     return {
-      data: res,
+      data: {
+        cidV1: pinResponse.cid,
+      },
     };
   } catch (error) {
     console.log(error);

@@ -8,13 +8,12 @@ import { NimiModel } from '../models/Nimi.model';
 
 jest.mock('axios');
 
-const testIpfsHash = 'QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR';
+const testIpfsHash =
+  'bafybeic3cfnuzh3rm7oqsbc3dfaahhxmrhmu52fdz2k5ozlxiarl7dt3km';
 
-(axios as jest.Mocked<typeof axios>).post.mockResolvedValue({
+(axios as jest.Mocked<typeof axios>).post.mockResolvedValueOnce({
   data: {
-    IpfsHash: testIpfsHash,
-    PinSize: 10000,
-    Timestamp: Date.now() / 1000,
+    cid: testIpfsHash,
   },
 });
 
@@ -75,15 +74,7 @@ describe('Nimi Controllers', () => {
     widgets: [],
   };
 
-  describe('createWebsiteFromTemplate', () => {
-    test('should create a Nimi card website from a template', async () => {
-      const publisNimiRes = await server.inject({
-        method: 'POST',
-        url: '/nimi/publish',
-        payload,
-      });
-      expect(publisNimiRes.statusCode).toBe(200);
-    });
+  describe('publishNimi', () => {
     test('should create a copy of the Nimi in database', async () => {
       const publisNimiRes = await server.inject({
         method: 'POST',
@@ -93,10 +84,10 @@ describe('Nimi Controllers', () => {
       expect(publisNimiRes.statusCode).toBe(200);
       console.log(publisNimiRes.result);
       const nimiFromDatabase = await NimiModel.findOne({
-        cid: testIpfsHash,
+        cidV1: testIpfsHash,
       });
       expect(nimiFromDatabase).toBeDefined();
-      expect(nimiFromDatabase?.cid).toBe(testIpfsHash);
+      expect(nimiFromDatabase?.cidV1).toBe(testIpfsHash);
       expect(nimiFromDatabase?.publisher).toBe(payload.ensAddress);
       expect(nimiFromDatabase?.nimi).toEqual(payload);
     });
