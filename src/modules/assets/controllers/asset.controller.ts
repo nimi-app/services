@@ -2,7 +2,8 @@ import { captureException } from '@sentry/node';
 import { Request } from '@hapi/hapi';
 import Boom from '@hapi/boom';
 import { getMimeType } from 'stream-mime-type';
-import { File, PinataService } from '../../shared/services/pinata';
+import { PinataService } from '../../shared/services/pinata';
+import { File } from '../../shared/util';
 // Constants
 import { PINATA_API_KEY, PINATA_API_SECRET } from '../../config/config.service';
 import { ImageAssetModel } from '../models';
@@ -46,6 +47,7 @@ export async function uploadImageAssetToIPFS(
       filename: 'image',
       contentType: mime,
       filepath: 'image',
+      name: 'image',
     });
 
     const pinFilesResults = await pinataService.pinFiles([assetFile]);

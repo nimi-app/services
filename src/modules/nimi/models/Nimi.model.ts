@@ -6,12 +6,16 @@ import { INimi } from '../interfaces/INimi.interface';
 export const NimiSchema = new Schema<INimi>(
   {
     publisher: {
-      type: String,
+      type: Schema.Types.String,
       required: true,
       unique: true,
     },
     cid: {
-      type: String,
+      type: Schema.Types.String,
+      alias: 'cidV0',
+    },
+    cidV1: {
+      type: Schema.Types.String,
       required: true,
     },
     nimi: {
@@ -43,6 +47,17 @@ NimiSchema.index({
 
 NimiSchema.plugin(MongooseDelete, {
   deletedAt: true,
+});
+
+NimiSchema.pre('validate', function (next) {
+  const isMisinggCID = !this.cid || this.cid === '';
+  const isMissingCIDV1 = !this.cidV1 && this.cidV1 === '';
+
+  if (isMisinggCID && isMissingCIDV1) {
+    return next(new Error('Either cid or cidV1 must be provided'));
+  }
+
+  return next();
 });
 
 // register the model and export it

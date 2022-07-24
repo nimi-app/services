@@ -41,3 +41,9 @@ export const JSON_WEB_TOKEN_SECRET = process.env
 export const NIMI_CONNECT_SIGNATURE_TEXT_PAYLOAD =
   process.env.NIMI_CONNECT_SIGNATURE_TEXT_PAYLOAD || 'Nimi Connect';
 
+/**
+ * Web3 Storage access token
+ */
+export const WEB3_STORAGE_ACCESS_TOKEN = process.env
+  .WEB3_STORAGE_ACCESS_TOKEN as string;
+

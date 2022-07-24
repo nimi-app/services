@@ -4,6 +4,8 @@ import { MongoDocument } from 'src/modules/shared/interfaces/MongoDocument.inter
 export interface INimi extends MongoDocument {
   publisher: string;
   cid: string;
+  cidV0: string;
+  cidV1: string;
   nimi: Nimi;
 }
 
