@@ -1,6 +1,7 @@
 import MongooseDelete from 'mongoose-delete';
+import MongoosePaginate from 'mongoose-paginate-v2';
 import { nimiCard } from 'nimi-card';
-import { model, Schema } from 'mongoose';
+import { PaginateModel, model, Schema } from 'mongoose';
 import { INimi } from '../interfaces/INimi.interface';
 
 export const NimiSchema = new Schema<INimi>(
@@ -49,6 +50,9 @@ NimiSchema.plugin(MongooseDelete, {
   deletedAt: true,
 });
 
+// paginate with this plugin
+NimiSchema.plugin(MongoosePaginate);
+
 NimiSchema.pre('validate', function (next) {
   const isMisinggCID = !this.cid || this.cid === '';
   const isMissingCIDV1 = !this.cidV1 && this.cidV1 === '';
@@ -61,5 +65,5 @@ NimiSchema.pre('validate', function (next) {
 });
 
 // register the model and export it
-export const NimiModel = model<INimi>('Nimi', NimiSchema);
+export const NimiModel = model<INimi, PaginateModel<INimi>>('Nimi', NimiSchema);
 

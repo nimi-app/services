@@ -9,6 +9,7 @@ import { createNimiCardBundle } from '../templates';
 import { NimiModel } from '../models/Nimi.model';
 import { Web3StorageService } from '../../shared/services/web3-storage';
 import { APIGeneralResponse } from 'src/modules/shared/interfaces/response.interface';
+import { modelPaginationCustomLabels } from '../models/constants';
 
 interface IPublishNimiRequest extends Request {
   payload: Nimi;
@@ -63,6 +64,34 @@ export async function publishNimi(
         cidV1: pinResponse.cid,
       },
     };
+  } catch (error) {
+    console.log(error);
+    captureException(error);
+    throw Boom.badRequest(error);
+  }
+}
+
+interface IGetNimisRequest extends Request {
+  query: {
+    page: number;
+    limit: number;
+  };
+}
+
+export async function getNimis(req: IGetNimisRequest) {
+  try {
+    const { page, limit } = req.query;
+
+    const nimis = await NimiModel.paginate(
+      {},
+      {
+        page,
+        limit,
+        customLabels: modelPaginationCustomLabels,
+      }
+    );
+
+    return nimis;
   } catch (error) {
     console.log(error);
     captureException(error);

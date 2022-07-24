@@ -3,7 +3,7 @@ import Joi from 'joi';
 
 // Controllers
 import { twitter } from '../twitter/controllers';
-import { publishNimi } from '../nimi/controllers';
+import { getNimis, publishNimi } from '../nimi/controllers';
 import { uploadImageAssetToIPFS } from '../assets';
 import {
   createNimiConnectBearerSession,
@@ -41,6 +41,16 @@ async function register(server: Server) {
       tags: ['api', 'cards'],
     },
     handler: publishNimi,
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/nimis',
+    options: {
+      description: 'List Nimis',
+      tags: ['api', 'cards'],
+    },
+    handler: getNimis,
   });
 
   server.route({

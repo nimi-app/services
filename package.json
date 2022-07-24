@@ -34,6 +34,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.4.2",
     "mongoose-delete": "^0.5.4",
+    "mongoose-paginate-v2": "^1.7.0",
     "mongoose-unique-validator": "^3.1.0",
     "nimi-card": "^0.7.9-beta",
     "stream-mime-type": "^1.0.2",
