@@ -2,11 +2,12 @@ import { captureException } from '@sentry/node';
 import { Request } from '@hapi/hapi';
 import Boom from '@hapi/boom';
 import { getMimeType } from 'stream-mime-type';
-import { PinataService } from '../../shared/services/pinata';
 import { File } from '../../shared/util';
 // Constants
-import { PINATA_API_KEY, PINATA_API_SECRET } from '../../config/config.service';
+import { WEB3_STORAGE_ACCESS_TOKEN } from '../../config/config.service';
 import { ImageAssetModel } from '../models';
+import { APIGeneralResponse } from '../../shared/interfaces/response.interface';
+import { Web3StorageService } from '../../shared/services';
 
 interface IUploadImageAssetToIPFSRequest extends Request {
   payload: {
@@ -23,12 +24,19 @@ const supportedMimeTypes = [
   'image/gif',
 ];
 
+interface IUploadImageAssetToIPFSResponse {
+  /**
+   * The cid of the pin that was created CIDv1
+   */
+  cidV1: string;
+}
+
 /**
  * Create a Nimi card website from a template
  */
 export async function uploadImageAssetToIPFS(
   req: IUploadImageAssetToIPFSRequest
-) {
+): Promise<APIGeneralResponse<IUploadImageAssetToIPFSResponse>> {
   try {
     const { stream, mime } = await getMimeType(req.payload.file);
 
@@ -38,31 +46,33 @@ export async function uploadImageAssetToIPFS(
     }
 
     // Start uploading the IPFS files
-    const pinataService = new PinataService({
-      key: PINATA_API_KEY,
-      secret: PINATA_API_SECRET,
+    const web3StorageService = new Web3StorageService({
+      accessToken: WEB3_STORAGE_ACCESS_TOKEN,
     });
+
+    const name = req.headers['x-name'] || 'image';
 
     const assetFile = new File({
       stream,
       filename: 'image',
       contentType: mime,
       filepath: 'image',
-      name: 'image',
+      name,
     });
 
-    const pinFilesResults = await pinataService.pinFiles([assetFile]);
+    const { cid } = await web3StorageService.pinFiles([assetFile]);
 
     // Save a copy to the database
     await new ImageAssetModel({
-      cid: pinFilesResults.IpfsHash,
+      cidV1: cid,
       description: '',
-      name: '',
-      createdAt: pinFilesResults.Timestamp,
-    });
+      name,
+    }).save();
 
     return {
-      data: pinFilesResults,
+      data: {
+        cidV1: cid,
+      },
     };
   } catch (error) {
     console.log(error);
