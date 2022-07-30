@@ -5,12 +5,12 @@ import {
   Web3StorageServiceParams,
   Web3StorageServicePinOptions,
   Web3StorageServicePinResponse,
+  IWeb3StorageService,
 } from './Web3Storage.types';
 
-export class Web3StorageService {
+export class Web3StorageService implements IWeb3StorageService {
   public readonly baseUrl = 'https://api.web3.storage';
-
-  private readonly accessToken: string;
+  public readonly accessToken: string;
 
   constructor({ accessToken }: Web3StorageServiceParams) {
     this.accessToken = accessToken;
