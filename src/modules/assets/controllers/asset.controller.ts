@@ -20,6 +20,7 @@ const supportedMimeTypes = [
   'image/gif',
   'image/webp',
   'image/svg+xml',
+  'image/gif',
 ];
 
 /**
