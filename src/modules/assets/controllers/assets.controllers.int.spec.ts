@@ -1,5 +1,6 @@
 import { Server } from '@hapi/hapi';
 import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import FormData from 'form-data';
 import mongoose from 'mongoose';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -9,17 +10,11 @@ const streamToPromise = require('stream-to-promise');
 import { create, configure } from '../../../server';
 import { ImageAssetModel } from '../models';
 
-jest.mock('axios');
+// This sets the mock adapter on the default instance
+const axiosMock = new MockAdapter(axios);
 
-const testIpfsHash = 'QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR';
-
-(axios as jest.Mocked<typeof axios>).post.mockResolvedValueOnce({
-  data: {
-    IpfsHash: testIpfsHash,
-    PinSize: 10000,
-    Timestamp: Date.now() / 1000,
-  },
-});
+const testIpfsHash =
+  'bafybeic3cfnuzh3rm7oqsbc3dfaahhxmrhmu52fdz2k5ozlxiarl7dt3km';
 
 describe('Assets Controllers', () => {
   let server: Server;
@@ -37,6 +32,10 @@ describe('Assets Controllers', () => {
 
   describe('uploadImageAssetToIPFS', () => {
     test('should upload PNG asset to IPFS and save a local copy in database', async () => {
+      axiosMock.onPost('https://api.web3.storage/upload').reply(200, {
+        cid: testIpfsHash,
+      });
+
       const formData = new FormData();
 
       formData.append(
@@ -61,11 +60,11 @@ describe('Assets Controllers', () => {
       });
 
       expect(signupRes.statusCode).toBe(200);
-      expect((signupRes.result as any).data.IpfsHash).toEqual(testIpfsHash);
-
+      expect((signupRes.result as any).data.cidV1).toEqual(testIpfsHash);
       const assetFromMongo = await ImageAssetModel.findOne({
-        cid: testIpfsHash,
+        cidV1: testIpfsHash,
       });
+
       expect(assetFromMongo).toBeDefined();
     });
   });

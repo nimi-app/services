@@ -1,1 +1,1 @@
-export * from './asset.controller';
+export * from './assets.controllers';
